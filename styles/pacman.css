@@ -1,0 +1,49 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+#gamewrap{
+    display: inline-block;
+    width: 400px;
+}
+div.row{
+    height: 40px;
+}
+div.row div{
+    width: 40px;
+    height: 40px;
+    display: inline-block;
+}
+div.brick{
+    background-color: blue;
+}
+div.empty{
+    background-color: black;
+}
+div.coin{
+    background: url(../images/coin.png) no-repeat center;
+    background-size: 100% 100%;
+    background-color: black;
+}
+div#pacman{
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    background-image: url(../images/pacman.png);
+    background-repeat: none;
+    background-position: center;
+    background-size: 100% 100%;
+    left: 40px;
+    top: 40px;
+}
+div#score{
+    display: inline-block;
+    vertical-align: top;
+    margin: 50px 0 0 50px;
+    border: 2px solid black;
+    width: 70px;
+    height: 30px;
+    text-align: center;
+    padding: 10px 5px;
+    font-weight: bold;
+}
