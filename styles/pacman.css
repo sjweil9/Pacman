@@ -4,7 +4,7 @@
 }
 #gamewrap{
     display: inline-block;
-    width: 400px;
+    width: 800px;
 }
 div.row{
     height: 40px;
@@ -72,5 +72,16 @@ div#message{
     height: 70px;
     border: 2px solid black;
     margin: 50px auto;
+    font-weight: bold;
+}
+div#level{
+    display: inline-block;
+    width: 116px;
+    height: 25px;
+    margin: 50px 0 0 50px;
+    border: 2px solid black;
+    vertical-align: top;
+    text-align: center;
+    padding: 10px 5px;
     font-weight: bold;
 }
