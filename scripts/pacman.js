@@ -1,5 +1,6 @@
 /* current bugs:
-    
+    pacman starting on top of coin doesnt eat it
+    dynamic created ghosts move 2-3 times then disappear (but still exist)
 */
 
 $(document).ready(function(){
@@ -50,9 +51,23 @@ $(document).ready(function(){
         lives: 5,
     };
     // object w ghost location
-    var ghost = {
+    var ghost = [{
         x: 6,
         y: 3
+    }, {
+        x: 4,
+        y: 4
+    }];
+    // create new ghosts
+    function addGhost() {
+        ghost.length++;
+        ghost[ghost.length-1] = {
+            x: 6,
+            y: 3
+        };
+        var ghostdiv = "<div class='ghost' id='" + ghost.length + "'></div>";
+        $('body').append(ghostdiv);
+        displayGhost();
     };
     // redraws the game board
     function createWorld(){
@@ -80,40 +95,44 @@ $(document).ready(function(){
     };
     // check if pacman died
     function checkDeath(){
-        if (pacman.x == ghost.x && pacman.y == ghost.y) {
-            $('#message').text("Ouch! You were killed by a ghost.")            
-            $('#pacman').fadeOut(200, function(){
-                pacman.x = 1;
-                pacman.y = 1;
-                pacman.lives--;
-                $('#lives').text('Lives: ' + pacman.lives);                
-                if (pacman.lives <= 0) {
-                    $('#message').text("Sorry. You are out of lives.");
-                    $('#pacman').hide();
-                    pacman.x = 0;
-                    pacman.y = 0;
-                }
-                else {
-                    movePacman();                
-                    $('#pacman').fadeIn();
-                }
-            });
+        for (var i = 0; i < ghost.length; i++) {
+            if (pacman.x == ghost[i].x && pacman.y == ghost[i].y) {
+                $('#message').text("Ouch! You were killed by a ghost.")            
+                $('#pacman').fadeOut(200, function(){
+                    pacman.x = 1;
+                    pacman.y = 1;
+                    pacman.lives--;
+                    $('#lives').text('Lives: ' + pacman.lives);                
+                    if (pacman.lives <= 0) {
+                        $('#message').text("Sorry. You are out of lives.");
+                        $('#pacman').hide();
+                        pacman.x = 0;
+                        pacman.y = 0;
+                    }
+                    else {
+                        movePacman();                
+                        $('#pacman').fadeIn();
+                    }
+                });
+            }
         }       
-    } 
+    };
     // actually change pacman position
     function movePacman() {
         $('#pacman').css({
             left : pacman.x*40,
             top : pacman.y*40
         });
-
-    }
+    };
     // change ghost position
     function displayGhost() {
-        $('.ghost').css({
-            left : ghost.x*40,
-            top : ghost.y*40
-        });
+        for (var i = 0; i < ghost.length; i++) {
+            var ghostnum = 'div#' + (i+1) + '.ghost';
+            $(ghostnum).css({
+                left : ghost[i].x*40,
+                top : ghost[i].y*40
+            });
+        }
     };
     // set new scores
     function changeScore() {
@@ -136,6 +155,7 @@ $(document).ready(function(){
                     movePacman();
                     $('#gamewrap').fadeIn(200);
                     $('#pacman').fadeIn(200);
+                    addGhost();
                 });
             });
         }
@@ -192,18 +212,20 @@ $(document).ready(function(){
     };
 
     function moveGhost() {
-        var randomDir = Math.floor(Math.random()*4);
-        if (randomDir == 0 && world[ghost.y][ghost.x+1] != 2) {
-            ghost.x += 1;
-        }
-        else if (randomDir == 1 && world[ghost.y][ghost.x-1] != 2) {
-            ghost.x -= 1;
-        }
-        else if (randomDir == 2 && world[ghost.y+1][ghost.x] != 2) {
-            ghost.y += 1;
-        }
-        else if (randomDir == 3 && world[ghost.y-1][ghost.x] != 2) {
-            ghost.y -= 1;
+        for (var i = 0; i < ghost.length; i++) {
+            var randomDir = Math.floor(Math.random()*4);
+            if (randomDir == 0 && world[ghost[i].y][ghost[i].x+1] != 2) {
+                ghost[i].x += 1;
+            }
+            else if (randomDir == 1 && world[ghost[i].y][ghost[i].x-1] != 2) {
+                ghost[i].x -= 1;
+            }
+            else if (randomDir == 2 && world[ghost[i].y+1][ghost[i].x] != 2) {
+                ghost[i].y += 1;
+            }
+            else if (randomDir == 3 && world[ghost[i].y-1][ghost[i].x] != 2) {
+                ghost[i].y -= 1;
+            }
         }
         displayGhost();
         checkDeath();
