@@ -61,11 +61,17 @@ $(document).ready(function(){
                 pacman.x = 1;
                 pacman.y = 1;
                 pacman.lives--;
-                $('#lives').text('Lives: ' + pacman.lives);
-                movePacman();                
-                $('#pacman').fadeIn();
+                $('#lives').text('Lives: ' + pacman.lives);                
+                if (pacman.lives <= 0) {
+                    $('#message').text("Sorry. You are out of lives.");
+                    $('#pacman').hide();
+                }
+                else {
+                    movePacman();                
+                    $('#pacman').fadeIn();
+                }
             });
-        }
+        }       
     } 
     // actually change pacman position
     function movePacman() {
