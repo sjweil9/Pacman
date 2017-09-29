@@ -160,7 +160,30 @@ $(document).ready(function(){
         displayGhost();
         checkDeath();
     };
+    // make cherries randomly appear
+    // first set interval
+    var cherryIntervalId;
+    
+    function cherryInterval() {
+        cherryIntervalId = setInterval(createCherry, 10000);
+    };
+
+    // define function that makes cherry appear
+
+    function createCherry() {
+        var ranx = Math.floor(Math.random()*(world[0].length));
+        var rany = Math.floor(Math.random()*(world.length));
+        if (world[rany][ranx] != 2) {
+            world[rany][ranx] = 3;
+            createWorld();
+        }
+        else {
+            createCherry();
+        }
+    };
+
     // get shit started
     createWorld();
     ghostInterval();
+    cherryInterval();
 });
