@@ -4,12 +4,12 @@ $(document).ready(function(){
         [2,2,2,2,2,2,2,2,2,2],
         [2,0,1,1,2,1,1,1,1,2],
         [2,1,0,1,2,1,1,1,1,2],
-        [2,1,1,1,2,1,1,1,1,2],
+        [2,1,1,1,2,1,4,1,1,2],
         [2,1,1,1,2,1,1,0,1,2],
         [2,1,1,0,1,1,1,1,1,2],
         [2,1,1,1,1,1,1,1,1,2],
         [2,1,1,1,2,2,2,2,1,2],
-        [2,1,1,1,4,1,2,1,3,2],
+        [2,1,1,1,1,1,2,1,3,2],
         [2,2,2,2,2,2,2,2,2,2]
     ]
     // object w pacman location
@@ -113,6 +113,57 @@ $(document).ready(function(){
         }
     });
 
+    // move the ghost around
+    var intervalId;
+
+    function ghostInterval() {
+        intervalId = setInterval(moveGhost, 500);
+    };
+
+    function moveGhost() {
+        var randomDir = Math.floor(Math.random()*4);
+        if (randomDir == 0) {
+            for (var i = 0; i < world.length; i++) {
+                for (var j = 0; j < world[i].length; j++) {
+                    if (world[i][j] == 4 && world[i-1][j] != 2) {
+                        world[i-1][j] = 4;
+                        world[i][j] = 1;
+                    }
+                }
+            }
+        }
+        else if (randomDir == 1) {
+            for (var i = 0; i < world.length; i++) {
+                for (var j = 0; j < world[i].length; j++) {
+                    if (world[i][j] == 4 && world[i+1][j] != 2) {
+                        world[i+1][j] = 4;
+                        world[i][j] = 1;
+                    }
+                }
+            }
+        }
+        else if (randomDir == 2) {
+            for (var i = 0; i < world.length; i++) {
+                for (var j = 0; j < world[i].length; j++) {
+                    if (world[i][j] == 4 && world[i][j-1] != 2) {
+                        world[i][j-1] = 4;
+                        world[i][j] = 1;
+                    }
+                }
+            }
+        }
+        else if (randomDir == 3) {
+            for (var i = 0; i < world.length; i++) {
+                for (var j = 0; j < world[i].length; j++) {
+                    if (world[i][j] == 4 && world[i][j+1] != 2) {
+                        world[i][j+1] = 4;
+                        world[i][j] = 1;
+                    }
+                }
+            }
+        }
+    };
     // get shit started
     createWorld();
-})
+    ghostInterval();
+});
