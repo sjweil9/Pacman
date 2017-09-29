@@ -1,24 +1,34 @@
+/* current bugs:
+    ghost jumping multiple spots - seems to happen more when player also moving
+    losing multiple lives at one time - is the pacman staying on top of ghost?
+*/
+
 $(document).ready(function(){
     // array with world grid
     var world = [
         [2,2,2,2,2,2,2,2,2,2],
         [2,0,1,1,2,1,1,1,1,2],
         [2,1,0,1,2,1,1,1,1,2],
-        [2,1,1,1,2,1,4,1,1,2],
+        [2,1,1,1,2,1,1,1,1,2],
         [2,1,1,1,2,1,1,0,1,2],
         [2,1,1,0,1,1,1,1,1,2],
         [2,1,1,1,1,1,1,1,1,2],
         [2,1,1,1,2,2,2,2,1,2],
         [2,1,1,1,1,1,2,1,3,2],
         [2,2,2,2,2,2,2,2,2,2]
-    ]
+    ];
     // object w pacman location
     var pacman = {
         x: 1,
         y: 1,
         score: 0,
         lives: 5,
-    }
+    };
+    // object w ghost location
+    var ghost = {
+        x: 6,
+        y: 3
+    };
     // redraws the game board
     function createWorld(){
         var worldhtml = "";        
@@ -38,14 +48,25 @@ $(document).ready(function(){
                 else if (world[i][j] == 0) {
                     worldhtml += "<div class='empty'></div>";
                 }
-                else if (world[i][j] == 4) {
-                    worldhtml += "<div class='ghost'></div>";
-                }
             }
             worldhtml += "</div>";
         }
         $('#gamewrap').html(worldhtml);
     };
+    // check if pacman died
+    function checkDeath(){
+        if (pacman.x == ghost.x && pacman.y == ghost.y) {
+            $('#message').text("Ouch! You were killed by a ghost.")            
+            $('#pacman').fadeOut(200, function(){
+                pacman.x = 1;
+                pacman.y = 1;
+                pacman.lives--;
+                $('#lives').text('Lives: ' + pacman.lives);
+                movePacman();                
+                $('#pacman').fadeIn();
+            });
+        }
+    } 
     // actually change pacman position
     function movePacman() {
         $('#pacman').css({
@@ -54,11 +75,17 @@ $(document).ready(function(){
         });
 
     }
+    // change ghost position
+    function displayGhost() {
+        $('.ghost').css({
+            left : ghost.x*40,
+            top : ghost.y*40
+        });
+    }
     // set new scores
     function changeScore() {
         $('#score').text("Score: " + pacman.score);
     }
-
     // determine direction to send pacman, and call function to move him
     $(document).keydown(function(e){
         if (e.which == 37) {
@@ -85,19 +112,9 @@ $(document).ready(function(){
                 $('div#pacman').css('background-image', 'url(images/pacmandown.png)');
             }
         }
+        movePacman();                    
             // check if pacman hits a ghost - send back to start
-        if (world[pacman.y][pacman.x] == 4) {
-            $('#message').text("Ouch! You were killed by a ghost.")            
-            $('#pacman').fadeOut(1000, function(){
-                pacman.x = 1;
-                pacman.y = 1;
-                pacman.lives--;
-                $('#lives').text('Lives: ' + pacman.lives);
-                movePacman();                
-                $('#pacman').fadeIn();
-            });
-        }
-        movePacman();            
+        checkDeath();   
             // check if pacman scored!
         if (world[pacman.y][pacman.x] == 1) {
             world[pacman.y][pacman.x] = 0;
@@ -117,52 +134,25 @@ $(document).ready(function(){
     var intervalId;
 
     function ghostInterval() {
-        intervalId = setInterval(moveGhost, 1000);
+        intervalId = setInterval(moveGhost, 500);
     };
 
     function moveGhost() {
         var randomDir = Math.floor(Math.random()*4);
-        if (randomDir == 0) {
-            for (var i = 0; i < world.length; i++) {
-                for (var j = 0; j < world[i].length; j++) {
-                    if (world[i][j] == 4 && world[i-1][j] != 2) {
-                        world[i-1][j] = 4;
-                        world[i][j] = 1;
-                    }
-                }
-            }
+        if (randomDir == 0 && world[ghost.y][ghost.x+1] != 2) {
+            ghost.x += 1;
         }
-        else if (randomDir == 1) {
-            for (var i = 0; i < world.length; i++) {
-                for (var j = 0; j < world[i].length; j++) {
-                    if (world[i][j] == 4 && world[i+1][j] != 2) {
-                        world[i+1][j] = 4;
-                        world[i][j] = 1;
-                    }
-                }
-            }
+        else if (randomDir == 1 && world[ghost.y][ghost.x-1] != 2) {
+            ghost.x -= 1;
         }
-        else if (randomDir == 2) {
-            for (var i = 0; i < world.length; i++) {
-                for (var j = 0; j < world[i].length; j++) {
-                    if (world[i][j] == 4 && world[i][j-1] != 2) {
-                        world[i][j-1] = 4;
-                        world[i][j] = 1;
-                    }
-                }
-            }
+        else if (randomDir == 2 && world[ghost.y+1][ghost.x] != 2) {
+            ghost.y += 1;
         }
-        else if (randomDir == 3) {
-            for (var i = 0; i < world.length; i++) {
-                for (var j = 0; j < world[i].length; j++) {
-                    if (world[i][j] == 4 && world[i][j+1] != 2) {
-                        world[i][j+1] = 4;
-                        world[i][j] = 1;
-                    }
-                }
-            }
+        else if (randomDir == 3 && world[ghost.y-1][ghost.x] != 2) {
+            ghost.y -= 1;
         }
-        createWorld();
+        displayGhost();
+        checkDeath();
     };
     // get shit started
     createWorld();

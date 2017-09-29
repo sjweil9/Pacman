@@ -33,7 +33,11 @@ div.cherry{
 div.ghost{
     background: url(../images/redghost.png) no-repeat center;
     background-size: 100% 100%;
-    background-color: black;
+    position: absolute;
+    left: 240px;
+    top: 120px;
+    width: 40px;
+    height: 40px;
 }
 div#pacman{
     width: 40px;
