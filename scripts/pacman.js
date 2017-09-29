@@ -117,7 +117,7 @@ $(document).ready(function(){
     var intervalId;
 
     function ghostInterval() {
-        intervalId = setInterval(moveGhost, 500);
+        intervalId = setInterval(moveGhost, 1000);
     };
 
     function moveGhost() {
@@ -162,6 +162,7 @@ $(document).ready(function(){
                 }
             }
         }
+        createWorld();
     };
     // get shit started
     createWorld();
