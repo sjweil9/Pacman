@@ -1,22 +1,44 @@
 /* current bugs:
-    ghost jumping multiple spots - seems to happen more when player also moving
-    losing multiple lives at one time - is the pacman staying on top of ghost?
+    
 */
 
 $(document).ready(function(){
     // array with world grid
     var world = [
-        [2,2,2,2,2,2,2,2,2,2],
-        [2,0,1,1,2,1,1,1,1,2],
-        [2,1,0,1,2,1,1,1,1,2],
-        [2,1,1,1,2,1,1,1,1,2],
-        [2,1,1,1,2,1,1,0,1,2],
-        [2,1,1,0,1,1,1,1,1,2],
-        [2,1,1,1,1,1,1,1,1,2],
-        [2,1,1,1,2,2,2,2,1,2],
-        [2,1,1,1,1,1,2,1,3,2],
-        [2,2,2,2,2,2,2,2,2,2]
+        [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+        [2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+        [2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+        [2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+        [2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+        [2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+        [2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+        [2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+        [2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+        [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
     ];
+    // create a random world
+    function randomWorld(worldarray) {
+        function getRnd(num) {
+            return Math.floor(Math.random()*num);
+        };
+        for (var i = 0; i < worldarray.length; i++) {
+            for (var j = 0; j < worldarray[i].length; j++) {
+                if (i == 0 || i == worldarray.length-1 || j == 0 || j == worldarray[i].length-1) {
+                    worldarray[i][j] = 2;
+                }
+                else {
+                    if (worldarray[i-1][j] != 2 && worldarray[i+1][j] != 2 &&worldarray[i][j-1] != 2 &&worldarray[i][j+1] != 2) {
+                        worldarray[i][j] = getRnd(3);                        
+                    }
+                    else {
+                        worldarray[i][j] = getRnd(2);
+                    }
+                }
+            }
+        }
+        return worldarray;
+    };
+
     // object w pacman location
     var pacman = {
         x: 1,
@@ -65,6 +87,8 @@ $(document).ready(function(){
                 if (pacman.lives <= 0) {
                     $('#message').text("Sorry. You are out of lives.");
                     $('#pacman').hide();
+                    pacman.x = 0;
+                    pacman.y = 0;
                 }
                 else {
                     movePacman();                
@@ -186,4 +210,10 @@ $(document).ready(function(){
     createWorld();
     ghostInterval();
     cherryInterval();
+
+    // click to set random level
+    $('button').click(function() {
+        randomWorld(world);
+        createWorld();
+    });
 });
