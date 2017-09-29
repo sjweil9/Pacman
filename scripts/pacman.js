@@ -3,8 +3,9 @@
 */
 
 $(document).ready(function(){
-    // initial score target
+    // initial score target and level
     var scoretarget = 1000;
+    var level = 1;
     // array with world grid
     var world = [
         [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
@@ -124,7 +125,9 @@ $(document).ready(function(){
         if (pacman.score >= scoretarget) {
             $('#message').text("Congratulations! You beat the level. Time for a new one.");
             $('#pacman').fadeOut(200, function() {
-                scoretarget += 1000;
+                scoretarget += 1000*level;
+                level++;
+                $('#level').text('Level: ' + level);
                 pacman.x = 1;
                 pacman.y = 1;
                 $('#gamewrap').fadeOut(200, function() {
