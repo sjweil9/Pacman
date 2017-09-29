@@ -3,6 +3,8 @@
 */
 
 $(document).ready(function(){
+    // initial score target
+    var scoretarget = 1000;
     // array with world grid
     var world = [
         [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
@@ -111,11 +113,30 @@ $(document).ready(function(){
             left : ghost.x*40,
             top : ghost.y*40
         });
-    }
+    };
     // set new scores
     function changeScore() {
         $('#score').text("Score: " + pacman.score);
-    }
+        checkScore();
+    };
+    // determine if score enough for next level
+    function checkScore() {
+        if (pacman.score >= scoretarget) {
+            $('#message').text("Congratulations! You beat the level. Time for a new one.");
+            $('#pacman').fadeOut(200, function() {
+                scoretarget += 1000;
+                pacman.x = 1;
+                pacman.y = 1;
+                $('#gamewrap').fadeOut(200, function() {
+                    randomWorld(world);
+                    createWorld();
+                    movePacman();
+                    $('#gamewrap').fadeIn(200);
+                    $('#pacman').fadeIn(200);
+                });
+            });
+        }
+    };
     // determine direction to send pacman, and call function to move him
     $(document).keydown(function(e){
         if (e.which == 37) {
@@ -207,13 +228,8 @@ $(document).ready(function(){
     };
 
     // get shit started
+    randomWorld(world);
     createWorld();
     ghostInterval();
     cherryInterval();
-
-    // click to set random level
-    $('button').click(function() {
-        randomWorld(world);
-        createWorld();
-    });
 });
