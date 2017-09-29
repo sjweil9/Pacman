@@ -25,6 +25,16 @@ div.coin{
     background-size: 100% 100%;
     background-color: black;
 }
+div.cherry{
+    background: url(../images/cherry.png) no-repeat center;
+    background-size: 100% 100%;
+    background-color: black;
+}
+div.ghost{
+    background: url(../images/redghost.png) no-repeat center;
+    background-size: 100% 100%;
+    background-color: black;
+}
 div#pacman{
     width: 40px;
     height: 40px;
@@ -36,7 +46,12 @@ div#pacman{
     left: 40px;
     top: 40px;
 }
-div#score{
+#sidebar{
+    display: inline-block;
+    vertical-align: top;
+    width: 322px;
+}
+div#score, div#lives{
     display: inline-block;
     vertical-align: top;
     margin: 50px 0 0 50px;
@@ -45,5 +60,13 @@ div#score{
     height: 30px;
     text-align: center;
     padding: 10px 5px;
+    font-weight: bold;
+}
+div#message{
+    width: 188px;
+    padding: 15px;
+    height: 70px;
+    border: 2px solid black;
+    margin: 50px auto;
     font-weight: bold;
 }

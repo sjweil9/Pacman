@@ -9,14 +9,15 @@ $(document).ready(function(){
         [2,1,1,0,1,1,1,1,1,2],
         [2,1,1,1,1,1,1,1,1,2],
         [2,1,1,1,2,2,2,2,1,2],
-        [2,1,1,1,1,1,2,1,1,2],
+        [2,1,1,1,4,1,2,1,3,2],
         [2,2,2,2,2,2,2,2,2,2]
     ]
     // object w pacman location
     var pacman = {
         x: 1,
         y: 1,
-        score: 0
+        score: 0,
+        lives: 5,
     }
     // redraws the game board
     function createWorld(){
@@ -25,7 +26,10 @@ $(document).ready(function(){
             var divhtml = "<div class='row' id='" + i + "'>";
             worldhtml += divhtml;
             for (var j = 0; j < world[i].length; j++) {
-                if (world[i][j] == 2) {
+                if (world[i][j] == 3) {
+                    worldhtml += "<div class='cherry'></div>"
+                }
+                else if (world[i][j] == 2) {
                     worldhtml += "<div class='brick'></div>";
                 }
                 else if (world[i][j] == 1) {
@@ -34,7 +38,9 @@ $(document).ready(function(){
                 else if (world[i][j] == 0) {
                     worldhtml += "<div class='empty'></div>";
                 }
-
+                else if (world[i][j] == 4) {
+                    worldhtml += "<div class='ghost'></div>";
+                }
             }
             worldhtml += "</div>";
         }
@@ -79,10 +85,29 @@ $(document).ready(function(){
                 $('div#pacman').css('background-image', 'url(images/pacmandown.png)');
             }
         }
-        movePacman();
+            // check if pacman hits a ghost - send back to start
+        if (world[pacman.y][pacman.x] == 4) {
+            $('#message').text("Ouch! You were killed by a ghost.")            
+            $('#pacman').fadeOut(1000, function(){
+                pacman.x = 1;
+                pacman.y = 1;
+                pacman.lives--;
+                $('#lives').text('Lives: ' + pacman.lives);
+                movePacman();                
+                $('#pacman').fadeIn();
+            });
+        }
+        movePacman();            
+            // check if pacman scored!
         if (world[pacman.y][pacman.x] == 1) {
             world[pacman.y][pacman.x] = 0;
             pacman.score += 50;
+            changeScore();
+            createWorld();
+        }
+        else if (world[pacman.y][pacman.x] == 3) {
+            world[pacman.y][pacman.x] = 0;
+            pacman.score += 250;
             changeScore();
             createWorld();
         }
