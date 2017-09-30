@@ -1,4 +1,5 @@
 /* current bugs:
+    ghosts can start trapped inside blocks
 
     things to add:
     kill the ghosts (property on pacman set to t/f)
@@ -112,9 +113,9 @@ $(document).ready(function(){
     function checkDeath(){
         for (var i = 0; i < ghost.length; i++) {
             if (pacman.x == ghost[i].x && pacman.y == ghost[i].y) {
-                $('#message').text("Ouch! You were killed by a ghost.")
+                $('#message').text("Ouch! You were killed by a ghost.");
                 $('body').css('background-color', 'red');            
-                $('#pacman').fadeOut(200, function(){
+                $('#pacman').fadeOut(10, function(){
                     pacman.x = 1;
                     pacman.y = 1;
                     pacman.lives--;
@@ -124,6 +125,7 @@ $(document).ready(function(){
                         $('#pacman').hide();
                         pacman.x = 0;
                         pacman.y = 0;
+                        clearInterval(cherryIntervalId);
                     }
                     else {
                         movePacman();                
@@ -165,7 +167,9 @@ $(document).ready(function(){
                 scoretarget += 1000;
                 level++;
                 cherryIntervalId = setInterval(createCherry, 10250 - level*250);
-                intervalId = setInterval(moveGhost, 760 - level*10);
+                $('#speeds p:last-child').text("Cherries Appear Every " + (10250 - level*250)/1000 + " Seconds");
+                intervalId = setInterval(moveGhost, 760 - level*20);
+                $('#speeds p:first-child').text("Ghosts Move Every " + (760 - level*20)/1000 + " Seconds");
                 $('#level').text('Level: ' + level);
                 pacman.x = 1;
                 pacman.y = 1;
